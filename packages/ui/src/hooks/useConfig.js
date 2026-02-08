@@ -83,7 +83,7 @@ export function useIntelligenceConfig() {
     const skills = getSkills();
     return {
       main: [
-        { id: "assistant", icon: "Bot", label: "Assistant", path: "/" },
+        { id: "assistant", icon: "Bot", label: "Assistant", path: "/assistant" },
         { id: "dashboard", icon: "LayoutDashboard", label: "Dashboard", path: "/dashboard" },
       ],
       core: [

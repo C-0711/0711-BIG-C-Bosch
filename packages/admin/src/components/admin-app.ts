@@ -40,10 +40,7 @@ export class AdminApp extends LitElement {
     }
 
     @media (max-width: 768px) {
-      admin-sidebar {
-        display: none;
-      }
-      
+      admin-sidebar { display: none; }
       admin-sidebar.open {
         display: block;
         position: fixed;
@@ -62,11 +59,8 @@ export class AdminApp extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    // Load config on app start
     await configService.load();
     configService.subscribe((config) => { this.config = config; });
-    
-    // Handle URL routing
     this.handleRoute();
     window.addEventListener('popstate', () => this.handleRoute());
   }
@@ -84,7 +78,6 @@ export class AdminApp extends LitElement {
   private handleNavigate(e: CustomEvent) {
     const page = e.detail;
     this.activePage = page;
-    // Update URL
     window.history.pushState({}, '', `/admin/${page}`);
   }
 
@@ -103,10 +96,9 @@ export class AdminApp extends LitElement {
             .config=${this.config}
             @navigate=${this.handleNavigate}
           ></admin-sidebar>
-          <admin-content .activePage=${this.activePage}></admin-content>
+          <admin-content .activePage=${this.activePage} .config=${this.config}></admin-content>
         </div>
       </div>
-      
       <toast-container></toast-container>
       <confirm-dialog></confirm-dialog>
     `;

@@ -7,11 +7,11 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port: 7075,
+    port: 7080,
     proxy: {
-      '/api': 'http://localhost:7074',
+      '/api': 'http://localhost:7075',
       '/ws': {
-        target: 'ws://localhost:7074',
+        target: 'ws://localhost:7075',
         ws: true,
       },
     },
