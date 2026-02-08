@@ -1,0 +1,18 @@
+{
+  "name": "@0711/bosch-config",
+  "version": "1.0.0",
+  "description": "Bosch client configuration for 0711-BIG-C",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@0711/core": "workspace:*",
+    "@0711/templates": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

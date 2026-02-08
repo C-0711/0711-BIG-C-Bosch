@@ -1,0 +1,53 @@
+/**
+ * @0711/core - Core Framework for 0711-BIG-C
+ * 
+ * This package contains ONLY the framework:
+ * - Widget base classes and registry
+ * - Event bus and types
+ * - React hooks
+ * 
+ * NO client-specific code here.
+ * Standard templates are in @0711/templates.
+ */
+
+// Widget Framework
+export * from './widgets';
+
+// Event Bus
+export * from './events';
+
+// React Hooks
+export * from './hooks';
+
+// MCP Integration
+export * from './mcp';
+
+// Dashboard
+export * from './dashboard';
+
+// Admin
+export * from './admin';
+
+// Utilities
+export * from './utils';
+
+// Claude Integration
+export * from './claude';
+
+// Widget Wizard
+export * from './wizard';
+
+// Skills
+export * from './skills';
+
+// Memory
+export * from './memory';
+
+// Agents
+export * from './agents';
+
+// Analytics
+export * from './analytics';
+
+// Templates
+export * from './templates';
