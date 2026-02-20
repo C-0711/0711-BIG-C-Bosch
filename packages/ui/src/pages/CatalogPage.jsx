@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FolderOpen, Package, Search, Activity, Grid, List, ChevronRight } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 export default function CatalogPage() {
   const [categories, setCategories] = useState([]);

@@ -26,7 +26,7 @@ export default function ProfessionalGraph({
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:8766/api/graph/network/${encodeURIComponent(name)}?limit=50`);
+      const response = await fetch(`/api/graph/network/${encodeURIComponent(name)}?limit=50`);
       if (!response.ok) throw new Error('Failed to load network');
       const data = await response.json();
       setGraphData(data);

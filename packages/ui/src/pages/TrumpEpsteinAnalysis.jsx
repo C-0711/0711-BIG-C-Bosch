@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import DocumentEvidence from '../components/DocumentEvidence';
 import Navigation from '../components/Navigation';
 
-const API = 'http://localhost:8766';
+const API = import.meta.env.VITE_API_URL || '';
 
 const TrumpEpsteinAnalysis = () => {
   const [networkData, setNetworkData] = useState(null);

@@ -1,4 +1,14 @@
 import React from 'react';
+import SkillsPage from './pages/SkillsPage';
+import KnowledgeBase from './pages/KnowledgeBase';
+import WorkspacesPage from './pages/Workspaces';
+import MarketingPage from './pages/MarketingPage';
+import ProductPage from './pages/ProductPage';
+import IntelligencePage from './pages/IntelligencePage';
+import GlobalNetwork from './pages/GlobalNetwork';
+import MindMap from './pages/MindMap';
+import CommandCenter from './pages/CommandCenter';
+import AnalyticsPage from './pages/AnalyticsPage';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider, useConfig } from './config/ConfigProvider';
 import DynamicSidebar from './components/DynamicSidebar';
@@ -73,19 +83,22 @@ function AppContent() {
           <Route path="/assistant" element={<Navigate to="/agent/product-expert" replace />} />
           
           {/* Core - Placeholder Pages */}
-          <Route path="/skills" element={<PlaceholderPage title="Skills" icon="🛠️" description="Verfügbare Skills und Automatisierungen für Ihre Agents." />} />
-          <Route path="/knowledge" element={<PlaceholderPage title="Knowledge Base" icon="📚" description="Wissensdatenbank und Dokumentation für Ihre Produkte." />} />
-          <Route path="/workspaces" element={<PlaceholderPage title="Workspaces" icon="📁" description="Arbeitsbereiche für verschiedene Projekte und Teams." />} />
+          <Route path="/skills" element={<SkillsPage />} />
+          <Route path="/knowledge" element={<KnowledgeBase />} />
+          <Route path="/workspaces" element={<WorkspacesPage />} />
           
           {/* Business - Placeholder Pages */}
-          <Route path="/marketing" element={<PlaceholderPage title="Marketing" icon="📢" description="Marketing-Inhalte und Kampagnen verwalten." />} />
-          <Route path="/product" element={<PlaceholderPage title="Produkt" icon="📦" description="Produktkatalog und Produktmanagement." />} />
-          <Route path="/intelligence" element={<PlaceholderPage title="Intelligence" icon="🧠" description="KI-gestützte Analysen und Insights." />} />
+          <Route path="/marketing" element={<MarketingPage />} />
+          <Route path="/product" element={<ProductPage />} />
+          <Route path="/intelligence" element={<IntelligencePage />} />
           
           {/* Legacy routes */}
           <Route path="/products" element={<Navigate to="/product" replace />} />
-          <Route path="/quality" element={<PlaceholderPage title="Qualität" icon="✅" description="Qualitätsprüfung und Audit-Tools." />} />
-          <Route path="/analytics" element={<PlaceholderPage title="Analytics" icon="📊" description="Analysen und Statistiken." />} />
+          <Route path="/quality" element={<AnalyticsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/global-network" element={<GlobalNetwork />} />
+          <Route path="/mindmap" element={<MindMap />} />
+          <Route path="/command" element={<CommandCenter />} />
           
           {/* Default */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

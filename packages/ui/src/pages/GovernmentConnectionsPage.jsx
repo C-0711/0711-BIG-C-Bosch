@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 
-const API = 'http://localhost:8766';
+const API = import.meta.env.VITE_API_URL || '';
 
 export default function GovernmentConnectionsPage() {
   const [officials, setOfficials] = useState([]);

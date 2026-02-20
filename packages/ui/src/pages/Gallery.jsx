@@ -4,7 +4,7 @@ import {
   ChevronLeft, ChevronRight, X, Package, Search, Filter
 } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 export default function Gallery() {
   const [images, setImages] = useState([]);

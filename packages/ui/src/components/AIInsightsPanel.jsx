@@ -40,7 +40,7 @@ export default function AIInsightsPanel({ productId }) {
     setError(null);
 
     try {
-      const baseUrl = `${window.location.protocol}//${window.location.hostname}:8766`;
+      const baseUrl = ``;
 
       const [lifecycle, demand, market, recommendations] = await Promise.all([
         fetchWithRetry(`${baseUrl}/api/analytics/lifecycle/${productId}`).catch(err => ({ error: err.message })),

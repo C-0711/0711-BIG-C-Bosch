@@ -17,7 +17,7 @@ export default function CategoryTree({ onSelectCategory, selectedCategory }) {
     setLoading(true);
     try {
       // Fetch ETIM groups
-      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8766/api/etim/groups?limit=50`);
+      const response = await fetch(`/api/etim/groups?limit=50`);
       const data = await response.json();
 
       // Build hierarchical structure

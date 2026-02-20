@@ -6,7 +6,7 @@ import {
   ChevronRight, ExternalLink, FileCheck, Award, Leaf, Recycle
 } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 // Animated loading card component
 const LoadingCard = ({ title, icon: Icon, delay = 0 }) => (

@@ -11,7 +11,7 @@
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
-const API = `${window.location.protocol}//${window.location.hostname}:8766`;
+const API = ``;
 
 // Community color palette (consistent with EnhancedProductGraph)
 const COMMUNITY_COLORS = [

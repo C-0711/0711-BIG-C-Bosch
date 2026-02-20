@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, Activity, FileText, Clock, TrendingUp, Filter } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 export default function SearchPage() {
   const [params, setParams] = useSearchParams();

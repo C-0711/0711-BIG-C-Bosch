@@ -13,7 +13,7 @@ export default function EntitiesPage() {
     setLoading(true)
     try {
       const entityType = filter !== 'all' ? `?entity_type=${filter}` : ''
-      const response = await fetch(`http://localhost:8766/api/entities${entityType}`)
+      const response = await fetch(`/api/entities${entityType}`)
       const data = await response.json()
       setEntities(data)
     } catch (error) {

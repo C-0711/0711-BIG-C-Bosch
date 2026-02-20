@@ -5,7 +5,7 @@ import {
   Package, Copy, Download, Search, Activity, Loader2
 } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 // Agent Types
 const AGENT_TYPES = [

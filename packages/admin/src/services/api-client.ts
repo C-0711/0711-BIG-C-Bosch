@@ -87,5 +87,6 @@ class ApiClient {
   }
 }
 
-// Singleton instance
-export const api = new ApiClient('/api');
+// Use environment variable for API URL, fallback to relative /api
+const API_BASE = import.meta.env.VITE_API_URL || '';
+export const api = new ApiClient(`${API_BASE}/api`);

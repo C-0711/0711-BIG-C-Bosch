@@ -27,7 +27,7 @@ export default function ProductSelector({ onAddProduct, selectedProducts = [], m
   const searchProducts = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8766/api/products/search`, {
+      const response = await fetch(`/api/products/search`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

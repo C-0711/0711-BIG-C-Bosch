@@ -37,32 +37,6 @@ const writeConfig = (config: any) => {
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 };
 
-// ========================================
-// MCP CACHE - Speeds up repeated calls
-// ========================================
-interface CacheEntry { data: any; timestamp: number; }
-const mcpCache: Map<string, CacheEntry> = new Map();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
-const getCacheKey = (mcpId: string, tool: string, args: any) =>
-  `${mcpId}:${tool}:${JSON.stringify(args || {})}`;
-
-const getFromCache = (key: string): any | null => {
-  const entry = mcpCache.get(key);
-  if (!entry) return null;
-  if (Date.now() - entry.timestamp > CACHE_TTL) {
-    mcpCache.delete(key);
-    return null;
-  }
-  return entry.data;
-};
-
-const setCache = (key: string, data: any) => {
-  mcpCache.set(key, { data, timestamp: Date.now() });
-};
-
-
-
 app.use(cors());
 
 // Attach config to request
@@ -417,15 +391,6 @@ app.post("/api/mcp/:id/call", async (req, res) => {
     return res.status(400).json({ error: "Missing 'tool' in request body" });
   }
   
-  // Check cache first
-  const cacheKey = getCacheKey(id, tool, args);
-  const cached = getFromCache(cacheKey);
-  if (cached) {
-    console.log(`[MCP Cache] HIT for ${tool}`);
-    return res.json(cached);
-  }
-  console.log(`[MCP Cache] MISS for ${tool}, fetching...`);
-  
   const connector = new MCPConnector({
     command: dsConfig.command,
     args: dsConfig.args || [],
@@ -434,12 +399,10 @@ app.post("/api/mcp/:id/call", async (req, res) => {
   });
   
   try {
-    await connector.connect(60000);
+    await connector.connect(10000);
     const result = await connector.callTool(tool, args || {});
     connector.dispose();
-    const response = { success: true, result };
-    setCache(cacheKey, response);
-    res.json(response);
+    res.json({ success: true, result });
   } catch (error: any) {
     connector.dispose();
     res.status(500).json({ success: false, error: error.message });
@@ -550,86 +513,10 @@ app.get("/api/agents/:agentId/available-tools", async (req, res) => {
   res.json({ success: true, availableTools });
 });
 
-
-
-// ========================================
-// CHAT API (Demo mode - uses config data)
-// ========================================
-app.post("/api/chat", async (req, res) => {
-  const { message, agentId } = req.body;
-  const config = readConfig();
-  const agent = config?.agents?.list?.find((a: any) => a.id === agentId);
-  
-  if (!agent) {
-    return res.status(404).json({ error: "Agent not found" });
-  }
-  
-  // Get MCP stats from cache for context
-  const statsKey = getCacheKey('bosch-mcp', 'get_statistics', {});
-  const cachedStats = getFromCache(statsKey);
-  const stats = cachedStats?.result?.content?.[0]?.text 
-    ? JSON.parse(cachedStats.result.content[0].text) 
-    : null;
-  
-  // Generate contextual response
-  const responses: { [key: string]: string } = {
-    'product-expert': `Als Produkt-Experte kann ich Ihnen helfen. Wir haben aktuell ${stats?.total_products?.toLocaleString() || '23.141'} Produkte im Katalog, davon ${stats?.active_products?.toLocaleString() || '21.953'} aktiv. Was möchten Sie über unsere Produkte wissen?`,
-    'quality-checker': `Der Qualitäts-Check zeigt: ${stats?.active_products?.toLocaleString() || '21.953'} aktive Produkte mit ${stats?.total_features?.toLocaleString() || '43.956'} Features. Soll ich eine Qualitätsanalyse durchführen?`,
-    'content-writer': `Ich kann SEO-optimierte Beschreibungen für Ihre ${stats?.total_products?.toLocaleString() || '23.141'} Produkte erstellen. Welches Produkt soll ich beschreiben?`,
-    'ecosystem-analyst': `Das Produkt-Ökosystem umfasst ${stats?.total_products?.toLocaleString() || '23.141'} Produkte mit ${stats?.total_relationships?.toLocaleString() || '267.834.520'} Beziehungen. Durchschnittlich ${stats?.avg_connections_per_product || '11.574'} Verbindungen pro Produkt.`,
-  };
-  
-  const defaultResponse = `Ich bin ${agent.name || agentId}. Wie kann ich Ihnen helfen? Unser Katalog enthält ${stats?.total_products?.toLocaleString() || '23.141'} Produkte.`;
-  const response = responses[agentId] || defaultResponse;
-  
-  res.json({
-    success: true,
-    message: response,
-    agent: agentId,
-    timestamp: new Date().toISOString()
-  });
-});
-
-
-// Pre-fetch MCP stats on startup for fast page loads
-const prefetchMCPStats = async () => {
-  console.log('[MCP Cache] Pre-fetching statistics...');
-  const config = readConfig();
-  const dsConfig = config?.dataSources?.providers?.['bosch-mcp'];
-  if (!dsConfig || dsConfig.type !== 'mcp') {
-    console.log('[MCP Cache] No bosch-mcp found, skipping prefetch');
-    return;
-  }
-  
-  const connector = new MCPConnector({
-    command: dsConfig.command,
-    args: dsConfig.args || [],
-    cwd: dsConfig.cwd,
-    env: dsConfig.env,
-  });
-  
-  try {
-    await connector.connect(60000);
-    const result = await connector.callTool('get_statistics', {});
-    const key = getCacheKey('bosch-mcp', 'get_statistics', {});
-    setCache(key, { success: true, result });
-    console.log('[MCP Cache] Statistics cached successfully');
-    connector.dispose();
-  } catch (error) {
-    console.error('[MCP Cache] Failed to prefetch:', error);
-    connector.dispose();
-  }
-};
-
-// Refresh cache every 5 minutes
-setInterval(prefetchMCPStats, CACHE_TTL);
-
 server.listen(PORT, () => {
   console.log(`🚀 0711-C-Intelligence Gateway running on port ${PORT}`);
   console.log(`📁 Config: ${configPath}`);
   console.log(`🔧 Admin UI: http://localhost:${PORT}/admin`);
   console.log(`📱 User UI: http://localhost:${PORT}/app`);
   console.log(`🔌 WebSocket: ws://localhost:${PORT}/ws`);
-  console.log(`📦 MCP Cache: Enabled (TTL: 5min)`);
-  setTimeout(prefetchMCPStats, 2000);
 });

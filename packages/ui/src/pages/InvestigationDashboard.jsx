@@ -34,7 +34,7 @@ export default function InvestigationDashboard() {
 
   const loadInitialEntity = async (name) => {
     try {
-      const response = await fetch(`http://localhost:8766/api/entities?search=${encodeURIComponent(name)}&limit=1`);
+      const response = await fetch(`/api/entities?search=${encodeURIComponent(name)}&limit=1`);
       const data = await response.json();
       if (data.entities && data.entities.length > 0) {
         setSelectedEntity(data.entities[0]);
@@ -55,7 +55,7 @@ export default function InvestigationDashboard() {
       // Try unified endpoint first
       try {
         const unifiedResponse = await fetch(
-          `http://localhost:8766/api/search/unified?query=${encodeURIComponent(query)}&mode=${mode}`
+          `/api/search/unified?query=${encodeURIComponent(query)}&mode=${mode}`
         );
         if (unifiedResponse.ok) {
           const data = await unifiedResponse.json();
@@ -76,7 +76,7 @@ export default function InvestigationDashboard() {
       };
 
       if (mode === 'all' || mode === 'documents') {
-        const docResponse = await fetch(`http://localhost:8766/api/search?query=${encodeURIComponent(query)}&limit=20`);
+        const docResponse = await fetch(`/api/search?query=${encodeURIComponent(query)}&limit=20`);
         if (docResponse.ok) {
           const docData = await docResponse.json();
           results.documents = docData.results || [];
@@ -84,7 +84,7 @@ export default function InvestigationDashboard() {
       }
 
       if (mode === 'all' || mode === 'entities') {
-        const entityResponse = await fetch(`http://localhost:8766/api/entities?search=${encodeURIComponent(query)}&limit=20`);
+        const entityResponse = await fetch(`/api/entities?search=${encodeURIComponent(query)}&limit=20`);
         if (entityResponse.ok) {
           const entityData = await entityResponse.json();
           results.entities = entityData.entities || [];

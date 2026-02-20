@@ -56,7 +56,7 @@ export default function EnhancedProductGraph({
 
     try {
       const response = await fetch(
-        `${window.location.protocol}//${window.location.hostname}:8766/api/graph/enhanced-network/${productId}`,
+        `/api/graph/enhanced-network/${productId}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

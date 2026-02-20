@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Folder, Users, MessageSquare, FileText, Star, Plus, Search, Trash2, CheckCircle, Clock, Loader2, X } from "lucide-react";
 
-const API_BASE = "http://localhost:8766";
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 const StatusBadge = ({ status }) => {
   const config = { active: { color: "#059669", label: "Aktiv" }, completed: { color: "#6b7280", label: "Abgeschlossen" } };

@@ -1,40 +1,12 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-// Dynamic URLs based on current location
 const getApiUrl = () => import.meta.env.VITE_API_URL || window.location.origin;
-const getWsUrl = () => {
-  if (import.meta.env.VITE_WS_URL) return import.meta.env.VITE_WS_URL;
-  const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
-  return `${proto}//${window.location.host}/ws`;
-};
 
 export function useIntelligenceConfig() {
   const [config, setConfig] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [connected, setConnected] = useState(false);
-  const wsRef = useRef(null);
-  const reconnectRef = useRef(null);
-
-  const connectWebSocket = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) return;
-    try {
-      const ws = new WebSocket(getWsUrl());
-      ws.onopen = () => { console.log("[Config] WS connected"); setConnected(true); };
-      ws.onmessage = (e) => {
-        try {
-          const msg = JSON.parse(e.data);
-          if (msg.type === "config.init" || msg.type === "config.changed") {
-            setConfig(msg.config);
-            setLoading(false);
-          }
-        } catch (err) { console.error("[Config] Parse error:", err); }
-      };
-      ws.onclose = () => { setConnected(false); reconnectRef.current = setTimeout(connectWebSocket, 3000); };
-      ws.onerror = () => { console.error("[Config] WebSocket error"); setConnected(false); };
-      wsRef.current = ws;
-    } catch (err) { console.error("[Config] WS error:", err); }
-  }, []);
 
   const fetchConfig = useCallback(async () => {
     try {
@@ -43,9 +15,14 @@ export function useIntelligenceConfig() {
       if (!res.ok) throw new Error("Failed to fetch config");
       const data = await res.json();
       setConfig(data);
+      setConnected(true);
       setError(null);
-    } catch (err) { setError(err.message); }
-    finally { setLoading(false); }
+    } catch (err) {
+      setError(err.message);
+      setConnected(false);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const patchConfig = useCallback(async (patch) => {
@@ -106,13 +83,9 @@ export function useIntelligenceConfig() {
   }, [config, getEnabledAgents, getEnabledWorkflows, getDataSources, getOutputs, getSkills]);
 
   useEffect(() => {
-    connectWebSocket();
     fetchConfig();
-    return () => {
-      if (reconnectRef.current) clearTimeout(reconnectRef.current);
-      if (wsRef.current) wsRef.current.close();
-    };
-  }, [connectWebSocket, fetchConfig]);
+    // REMOVED: 30-second polling that caused state resets
+  }, [fetchConfig]);
 
   return {
     config, loading, error, connected,

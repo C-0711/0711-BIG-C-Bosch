@@ -5,7 +5,7 @@ export default function Automation() {
   const { config, getEnabledWorkflows } = useConfig();
   const [runningIds, setRunningIds] = useState([]);
   
-  const automations = getEnabledWorkflows().filter(w => w.type === 'automation');
+  const automations = getEnabledWorkflows();
 
   const handleRunNow = (workflow) => {
     setRunningIds(prev => [...prev, workflow.id]);

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { GitCompare, Plus, X, Search, Activity, Package, CheckCircle, ArrowRight } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 const STATS = [
   { label: "Compare Slots", value: "3", Icon: GitCompare, color: "#0066cc" },

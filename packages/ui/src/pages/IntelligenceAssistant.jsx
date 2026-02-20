@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useMCPData } from "../hooks/useMCPData";
 import { Link } from "react-router-dom";
 import { 
   Send, Sparkles, Package, Search, BarChart3, Network, Image, FileText,
@@ -6,7 +7,7 @@ import {
   TrendingUp, GitBranch, Layers, Settings, Command, ExternalLink, Copy
 } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 // Tool definitions - what the AI can do
 const TOOLS = {
@@ -168,15 +169,16 @@ const SUGGESTIONS = [
 ];
 
 export default function IntelligenceAssistant() {
+  const { stats: mcpStats } = useMCPData();
   const [messages, setMessages] = useState([
     {
       role: "assistant",
       content: "Hallo! Ich bin dein Bosch Intelligence Assistant. Ich kann dir helfen Produkte zu finden, Daten zu analysieren, Content zu generieren und vieles mehr. Was möchtest du wissen?",
       stats: [
-        { label: "Products", value: "23,141", icon: Package, color: "#0066cc" },
-        { label: "Active", value: "21,953", icon: CheckCircle, color: "#059669" },
-        { label: "Relations", value: "267M", icon: GitBranch, color: "#7c3aed" },
-        { label: "Categories", value: "167", icon: Layers, color: "#ea580c" },
+        { label: "Products", value: mcpStats?.total_products?.toLocaleString() || "-", icon: Package, color: "#0066cc" },
+        { label: "Active", value: mcpStats?.active_products?.toLocaleString() || "-", icon: CheckCircle, color: "#059669" },
+        { label: "Relations", value: mcpStats?.total_relationships ? (mcpStats.total_relationships/1e6).toFixed(0)+"M" : "-", icon: GitBranch, color: "#7c3aed" },
+        { label: "Categories", value: mcpStats?.total_etim_groups?.toString() || "-", icon: Layers, color: "#ea580c" },
       ],
       time: "now",
     }
@@ -288,10 +290,10 @@ export default function IntelligenceAssistant() {
       return {
         content: "Das Produkt-Netzwerk visualisiert die Beziehungen zwischen allen 23.000+ Produkten mit 267 Millionen Verbindungen. Möchtest du es erkunden?",
         stats: [
-          { label: "Nodes", value: "23,141", icon: Package, color: "#0066cc" },
-          { label: "Edges", value: "267M", icon: GitBranch, color: "#059669" },
-          { label: "Clusters", value: "167", icon: Layers, color: "#7c3aed" },
-          { label: "Avg. Connections", value: "11,574", icon: Network, color: "#ea580c" },
+          { label: "Nodes", value: mcpStats?.total_products?.toLocaleString() || "-", icon: Package, color: "#0066cc" },
+          { label: "Edges", value: mcpStats?.total_relationships ? (mcpStats.total_relationships/1e6).toFixed(0)+"M" : "-", icon: GitBranch, color: "#059669" },
+          { label: "Clusters", value: mcpStats?.total_etim_groups?.toString() || "-", icon: Layers, color: "#7c3aed" },
+          { label: "Avg. Connections", value: mcpStats?.avg_relationships_per_product?.toLocaleString() || "-", icon: Network, color: "#ea580c" },
         ],
         actions: [
           { label: "Netzwerk öffnen", path: "/global-network", icon: Network },
@@ -354,7 +356,7 @@ export default function IntelligenceAssistant() {
                 Online
               </span>
               <span>•</span>
-              <span>23,141 products indexed</span>
+              <span>{mcpStats?.total_products?.toLocaleString() || "-"} products indexed</span>
             </div>
           </div>
         </div>

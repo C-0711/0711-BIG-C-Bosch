@@ -4,7 +4,7 @@ import {
   Package, CheckCircle, Zap, Plus, Trash2, Play, Pause, X, Loader2, TrendingUp, Rocket, Edit2
 } from "lucide-react";
 
-const API_BASE = "http://localhost:8766";
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 const CHANNEL_ICONS = {
   amazon: ShoppingBag,

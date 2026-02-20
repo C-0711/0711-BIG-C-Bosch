@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MessageSquare, Users, Clock, CheckCircle, Send, AlertCircle, Loader2, Plus, X, Headphones } from "lucide-react";
 
-const API_BASE = "http://localhost:8766";
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 const StatusBadge = ({ status }) => {
   const config = { open: { color: "#f59e0b", label: "Offen" }, in_progress: { color: "#0066cc", label: "In Bearbeitung" }, resolved: { color: "#059669", label: "Gelöst" } };

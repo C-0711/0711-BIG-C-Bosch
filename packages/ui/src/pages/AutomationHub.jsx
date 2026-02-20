@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Zap, Clock, Play, Pause, CheckCircle, AlertCircle, Plus, Trash2, RefreshCw, Loader2, X } from "lucide-react";
 
-const API_BASE = "http://localhost:8766";
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 const StatusBadge = ({ status }) => {
   const config = {

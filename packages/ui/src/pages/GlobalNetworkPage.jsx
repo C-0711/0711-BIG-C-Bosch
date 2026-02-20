@@ -3,7 +3,7 @@ import ForceGraph2D from "react-force-graph-2d";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Search, X } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 export default function GlobalNetworkPage() {
   const graphRef = useRef();

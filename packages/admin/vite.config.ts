@@ -8,6 +8,8 @@ export default defineConfig({
   },
   server: {
     port: 7080,
+    host: true,
+    allowedHosts: ['admin-bosch.0711.io', 'localhost', '192.168.145.10'],
     proxy: {
       '/api': 'http://localhost:7075',
       '/ws': {

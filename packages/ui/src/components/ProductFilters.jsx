@@ -20,7 +20,7 @@ export default function ProductFilters({
 
   const fetchEtimGroups = async () => {
     try {
-      const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8766/api/etim/groups?limit=20`);
+      const response = await fetch(`/api/etim/groups?limit=20`);
       const data = await response.json();
       setEtimGroups(data.groups || []);
     } catch (error) {

@@ -12,7 +12,7 @@ export default function DocumentPage() {
 
   const loadDocument = async () => {
     try {
-      const response = await fetch(`http://localhost:8766/api/documents/${id}`)
+      const response = await fetch(`/api/documents/${id}`)
       const data = await response.json()
       setDocument(data)
     } catch (error) {

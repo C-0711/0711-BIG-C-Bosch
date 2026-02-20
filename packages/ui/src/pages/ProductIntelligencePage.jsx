@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Package, CheckCircle, XCircle, GitBranch, Network, FileText, Search, Activity, ExternalLink } from "lucide-react";
 
-const API = `http://${window.location.hostname}:8766`;
+const API = import.meta.env.VITE_API_URL || '';
 
 export default function ProductIntelligencePage() {
   const { id } = useParams();

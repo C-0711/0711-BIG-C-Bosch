@@ -27,7 +27,7 @@ export default function TimelineChart({ entityName, compact = false }) {
   const loadTimeline = async (name) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8766/api/timeline/mentions?entity=${encodeURIComponent(name)}`);
+      const response = await fetch(`/api/timeline/mentions?entity=${encodeURIComponent(name)}`);
       if (response.ok) {
         const data = await response.json();
         setTimelineData(data);

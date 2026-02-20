@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Network } from 'vis-network';
 
-const API = `${window.location.protocol}//${window.location.hostname}:8766`;
+const API = ``;
 
 export default function CitationGraph({ supplierPid, onNodeSelect }) {
   const containerRef = useRef(null);
